@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="log4net" Version="3.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgendamentoVacinacao.Business\AgendamentoVacinacao.Business.csproj" />
+    <ProjectReference Include="..\AgendamentoVacinacao.Entities\AgendamentoVacinacao.Entities.csproj" />
+    <ProjectReference Include="..\AgendamentoVacinacao.Repository.Interface\AgendamentoVacinacao.Repository.Interface.csproj" />
+    <ProjectReference Include="..\AgendamentoVacinacao.Repository\AgendamentoVacinacao.Repository.csproj" />
+    <ProjectReference Include="..\AgendamentoVacinacao.Utilities\AgendamentoVacinacao.Utilities.csproj" />
+    <ProjectReference Include="..\AgendamentoVacincao.Business.Interface\AgendamentoVacinacao.Business.Interface.csproj" />
+  </ItemGroup>
+
+</Project>
