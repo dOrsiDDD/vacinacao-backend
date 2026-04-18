@@ -1,9 +1,9 @@
 <Solution>
-  <Project Path="../AgendamentoVacinacao.Business/AgendamentoVacinacao.Business.csproj" Id="ba649439-a960-47b0-af3c-d0db330fbd3d" />
-  <Project Path="../AgendamentoVacinacao.Entities/AgendamentoVacinacao.Entities.csproj" Id="2dacb912-fba2-4d60-8b6c-c5d192e08a02" />
-  <Project Path="../AgendamentoVacinacao.Repository.Interface/AgendamentoVacinacao.Repository.Interface.csproj" Id="41bec61b-9fa0-47f1-89f6-1fd719ca85dc" />
-  <Project Path="../AgendamentoVacinacao.Repository/AgendamentoVacinacao.Repository.csproj" Id="cc1551e5-f03c-4af2-a102-95fc68164112" />
-  <Project Path="../AgendamentoVacinacao.Utilities/AgendamentoVacinacao.Utilities.csproj" Id="3c42b165-3e29-43f0-a779-65559563a8f6" />
-  <Project Path="../AgendamentoVacincao.Business.Interface/AgendamentoVacinacao.Business.Interface.csproj" Id="09d05e29-8bc4-4a8b-920c-c9a1fe85d3eb" />
-  <Project Path="AgendamentoVacinacao.WebApi.csproj" />
+  <Project Path="AgendamentoVacinacao.Api/AgendamentoVacinacao.WebApi.csproj" />
+  <Project Path="AgendamentoVacinacao.Business/AgendamentoVacinacao.Business.csproj" />
+  <Project Path="AgendamentoVacinacao.Entities/AgendamentoVacinacao.Entities.csproj" />
+  <Project Path="AgendamentoVacinacao.Repository.Interface/AgendamentoVacinacao.Repository.Interface.csproj" />
+  <Project Path="AgendamentoVacinacao.Repository/AgendamentoVacinacao.Repository.csproj" />
+  <Project Path="AgendamentoVacinacao.Utilities/AgendamentoVacinacao.Utilities.csproj" />
+  <Project Path="AgendamentoVacincao.Business.Interface/AgendamentoVacinacao.Business.Interface.csproj" />
 </Solution>
