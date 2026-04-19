@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AgendamentoVacinacao.Entities\AgendamentoVacinacao.Entities.csproj" />
+    <ProjectReference Include="..\AgendamentoVacinacao.Utilities\AgendamentoVacinacao.Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

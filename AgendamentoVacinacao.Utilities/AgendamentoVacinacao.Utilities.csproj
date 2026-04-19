@@ -25,11 +25,11 @@
 
   <ItemGroup>
     <EmbeddedResource Update="Messages\BusinessMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>BusinessMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Messages\InfraMessages.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>InfraMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
