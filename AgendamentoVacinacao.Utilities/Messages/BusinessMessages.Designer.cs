@@ -22,7 +22,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class BusinessMessages {
+    public class BusinessMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         ///   Retorna a instância de ResourceManager armazenada em cache usada por essa classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AgendamentoVacinacao.Utilities.Messages.BusinessMessages", typeof(BusinessMessages).Assembly);
@@ -51,7 +51,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         ///   pesquisas de recursos que usam essa classe de recurso de tipo de alta segurança.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,36 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O preenchimento do campo {0} é obrigatório..
+        /// </summary>
+        public static string CampoObrigatorio {
+            get {
+                return ResourceManager.GetString("CampoObrigatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A data de nascimento não pode estar no futuro..
+        /// </summary>
+        public static string DataNascimentoFuturo {
+            get {
+                return ResourceManager.GetString("DataNascimentoFuturo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Insira uma data a partir de 1 jan 1900.
+        /// </summary>
+        public static string DataNascimentoInvalida {
+            get {
+                return ResourceManager.GetString("DataNascimentoInvalida", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Não é possível agendar datas passadas..
         /// </summary>
-        internal static string DataPassada {
+        public static string DataPassada {
             get {
                 return ResourceManager.GetString("DataPassada", resourceCulture);
             }
@@ -72,7 +99,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Este dia já se encontra com o número máximo de agendamentos: {0}.
         /// </summary>
-        internal static string DiaEsgotado {
+        public static string DiaEsgotado {
             get {
                 return ResourceManager.GetString("DiaEsgotado", resourceCulture);
             }
@@ -81,7 +108,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Este horário já se encontra com o número máximo de agendamentos: {0}.
         /// </summary>
-        internal static string HorarioEsgotado {
+        public static string HorarioEsgotado {
             get {
                 return ResourceManager.GetString("HorarioEsgotado", resourceCulture);
             }
@@ -90,7 +117,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Erro: horário {0} inválido. O agendamento deve ser feito em horários inteiros (ex: 8:00, 9:00...).
         /// </summary>
-        internal static string HorarioInvalido {
+        public static string HorarioInvalido {
             get {
                 return ResourceManager.GetString("HorarioInvalido", resourceCulture);
             }
@@ -99,7 +126,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Este ID nao existe na base de dados: {0}.
         /// </summary>
-        internal static string IdInvalido {
+        public static string IdInvalido {
             get {
                 return ResourceManager.GetString("IdInvalido", resourceCulture);
             }
@@ -108,7 +135,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O Id deve ser um número positivo.
         /// </summary>
-        internal static string IdNegativo {
+        public static string IdNegativo {
             get {
                 return ResourceManager.GetString("IdNegativo", resourceCulture);
             }
@@ -117,7 +144,7 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O nome {0} não está cadastrado..
         /// </summary>
-        internal static string NomeInvalido {
+        public static string NomeInvalido {
             get {
                 return ResourceManager.GetString("NomeInvalido", resourceCulture);
             }
