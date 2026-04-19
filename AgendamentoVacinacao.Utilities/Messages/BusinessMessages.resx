@@ -147,4 +147,10 @@
   <data name="DataNascimentoInvalida" xml:space="preserve">
     <value>Insira uma data a partir de 1 jan 1900</value>
   </data>
+  <data name="RegistroExistente" xml:space="preserve">
+    <value>O registro {0} já existe.</value>
+  </data>
+  <data name="PacienteJaAgendado" xml:space="preserve">
+    <value>O paciente {0} já se encontra agendado para o horário selecionado.</value>
+  </data>
 </root>
