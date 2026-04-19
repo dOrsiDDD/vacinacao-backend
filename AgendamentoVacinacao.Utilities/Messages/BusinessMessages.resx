@@ -138,4 +138,13 @@
   <data name="IdNegativo" xml:space="preserve">
     <value>O Id deve ser um número positivo</value>
   </data>
+  <data name="CampoObrigatorio" xml:space="preserve">
+    <value>O preenchimento do campo {0} é obrigatório.</value>
+  </data>
+  <data name="DataNascimentoFuturo" xml:space="preserve">
+    <value>A data de nascimento não pode estar no futuro.</value>
+  </data>
+  <data name="DataNascimentoInvalida" xml:space="preserve">
+    <value>Insira uma data a partir de 1 jan 1900</value>
+  </data>
 </root>
