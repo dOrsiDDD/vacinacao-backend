@@ -149,5 +149,23 @@ namespace AgendamentoVacinacao.Utilities.Messages {
                 return ResourceManager.GetString("NomeInvalido", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O paciente {0} já se encontra agendado para o horário selecionado..
+        /// </summary>
+        public static string PacienteJaAgendado {
+            get {
+                return ResourceManager.GetString("PacienteJaAgendado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O registro {0} já existe..
+        /// </summary>
+        public static string RegistroExistente {
+            get {
+                return ResourceManager.GetString("RegistroExistente", resourceCulture);
+            }
+        }
     }
 }

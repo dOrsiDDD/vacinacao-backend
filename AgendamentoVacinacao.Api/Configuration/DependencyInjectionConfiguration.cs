@@ -1,4 +1,10 @@
-﻿namespace AgendamentoVacinacao.WebApi.Configuration
+﻿using AgendamentoVacinacao.Business.Business;
+using AgendamentoVacinacao.Business.Interface.IBusiness;
+using AgendamentoVacinacao.Repository.Interface.IRepositories;
+using AgendamentoVacinacao.Repository.Repositories;
+using AgendamentoVacinacao.WebApi.Middleware;
+
+namespace AgendamentoVacinacao.WebApi.Configuration
 {
     public static class DependencyInjectionConfiguration
     {
@@ -11,17 +17,20 @@
 
         private static void InjetarRepositorio(IServiceCollection services)
         {
-            throw new NotImplementedException();
+            services.AddScoped<IPacienteRepository, PacienteRepository>();
+            services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
+
         }
 
         private static void InjetarServico(IServiceCollection services)
         {
-            throw new NotImplementedException();
+            services.AddScoped<IPacienteBusiness, PacienteBusiness>();
+            services.AddScoped<IAgendamentoBusiness, AgendamentoBusiness>();
         }
 
         private static void InjetarMiddleware(IServiceCollection services)
         {
-            throw new NotImplementedException();
+            services.AddTransient<ApiMiddleware>();
         }
     }
 }

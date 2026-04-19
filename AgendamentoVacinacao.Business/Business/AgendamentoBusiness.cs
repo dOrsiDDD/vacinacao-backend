@@ -7,6 +7,8 @@ using AgendamentoVacinacao.Utilities.Exceptions;
 using AgendamentoVacinacao.Utilities.Messages;
 using AgendamentoVacinacao.Utilities.Constants;
 using log4net;
+using AgendamentoVacinacao.Entities.Model;
+using System.Drawing;
 
 namespace AgendamentoVacinacao.Business.Business
 {
@@ -18,17 +20,6 @@ namespace AgendamentoVacinacao.Business.Business
         public AgendamentoBusiness(IAgendamentoRepository agendamentoRepository)
         {
             _agendamentoRepository = agendamentoRepository;
-        }
-
-        public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorPaciente(int pacienteId)
-        {
-            if (pacienteId <= 0)
-            {
-                _log.WarnFormat("Tentativa de consultar agendamentos com ID de paciente inválido: {0}", pacienteId);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
-            }
-
-            return await _agendamentoRepository.ConsultarAgendamentosPorPaciente(pacienteId);
         }
 
         public async Task<List<AgendamentoDTO>> ListarAgendamentos()
@@ -77,110 +68,121 @@ namespace AgendamentoVacinacao.Business.Business
             return agendamento;
         }
 
-        public async Task<Agendamento> Inserir(Agendamento agendamento)
+        public async Task<List<AgendamentoDTO>> Inserir(CadastroAgendamentoModel agendamento)
         {
-            _log.InfoFormat("Iniciando inserção de novo agendamento para paciente ID: {0}, Data: {1}, Hora: {2}", 
-                agendamento.idPaciente, agendamento.dataAgendamento, agendamento.horaAgendamento);
-            
-            agendamento.dataCriacao = DateTime.Now;
-            agendamento.status = agendamento.status ?? "pendente";
-            
-            var resultado = await _agendamentoRepository.Inserir(agendamento);
-            
-            _log.InfoFormat("Agendamento inserido com sucesso. ID: {0}", resultado.Id);
-            
-            return resultado;
-        }
+            _log.InfoFormat("Iniciando inserção de novo agendamento para paciente ID: {0}, Data: {1}, Hora: {2}", agendamento.idPaciente, agendamento.dataAgendamento, agendamento.horaAgendamento);
 
-        public async Task Inserir(IEnumerable<Agendamento> agendamentos)
-        {
-            var agendamentosList = agendamentos.ToList();
-            
-            _log.InfoFormat("Iniciando inserção de {0} agendamentos em lote.", agendamentosList.Count);
-            
-            foreach (var agendamento in agendamentosList)
+            DateTime horario = agendamento.dataAgendamento.ToDateTime(agendamento.horaAgendamento);
+
+            var agendamentosExistentes = await _agendamentoRepository.ConsultarAgendamentosPorHorario(horario);
+
+            foreach (var agendamentoExistente in agendamentosExistentes)
             {
-                agendamento.dataCriacao = DateTime.Now;
-                agendamento.status = agendamento.status ?? "pendente";
+                if (agendamentoExistente.idPaciente == agendamento.idPaciente)
+                {
+                    _log.WarnFormat("O paciente {0} já está agendado para o horário selecionado", agendamento.idPaciente);
+                    throw new BusinessException(string.Format(BusinessMessages.PacienteJaAgendado, agendamento.idPaciente));
+                }
             }
-            
-            await _agendamentoRepository.Inserir(agendamentosList);
-            
-            _log.InfoFormat("{0} agendamentos inseridos com sucesso.", agendamentosList.Count);
+
+            await ValidarAgendamento(agendamento.dataAgendamento, agendamento.horaAgendamento, agendamento.idPaciente);
+
+            var novoAgendamento = CriarAgendamento(agendamento);
+
+            await _agendamentoRepository.Inserir(novoAgendamento);
+
+            return await _agendamentoRepository.ListarAgendamentos();
         }
 
-        public async Task<Agendamento> Atualizar(Agendamento agendamento)
+        private static Agendamento CriarAgendamento(CadastroAgendamentoModel agendamentoModel)
         {
-            _log.InfoFormat("Iniciando atualização do agendamento ID: {0}", agendamento.Id);
+            return new Agendamento
+            {
+                idPaciente = agendamentoModel.idPaciente,
+                dataAgendamento = agendamentoModel.dataAgendamento,
+                horaAgendamento = agendamentoModel.horaAgendamento,
+                status = "pendente",
+                dataCriacao = DateTime.Now
+            };
+        }
+
+
+        public async Task<List<AgendamentoDTO>> AtualizarData(int id, DateTime novaData)
+        {
+            _log.InfoFormat("Iniciando atualização da data do agendamento ID: {0}", id);
             
-            var agendamentoExistente = await _agendamentoRepository.ObterAgendamentoPorId(agendamento.Id);
+            var agendamentoExistente = await _agendamentoRepository.ObterAgendamentoPorId(id);
             
             if (agendamentoExistente == null)
             {
-                _log.WarnFormat("Tentativa de atualizar agendamento inexistente. ID: {0}", agendamento.Id);
-                throw new BusinessException($"Agendamento com ID {agendamento.Id} não encontrado.");
+                _log.WarnFormat("Tentativa de atualizar agendamento inexistente. ID: {0}", id);
+                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
             }
+
+            agendamentoExistente.dataAgendamento = DateOnly.FromDateTime(novaData);
+            agendamentoExistente.horaAgendamento = TimeOnly.FromDateTime(novaData);
+
+            var resultado = await _agendamentoRepository.Atualizar(agendamentoExistente);
             
-            var resultado = await _agendamentoRepository.Atualizar(agendamento);
+            _log.InfoFormat("Agendamento ID: {0} atualizado com sucesso.", id);
             
-            _log.InfoFormat("Agendamento ID: {0} atualizado com sucesso.", agendamento.Id);
-            
-            return resultado;
+            return await _agendamentoRepository.ListarAgendamentos();
         }
 
-        public async Task Deletar(Agendamento agendamento)
+        public async Task<List<AgendamentoDTO>> AtualizarStatus(int id, StatusEnum novoStatus)
         {
-            _log.InfoFormat("Iniciando exclusão do agendamento ID: {0}", agendamento.Id);
-            
+            _log.InfoFormat("Iniciando atualização da data do agendamento ID: {0}", id);
+
+            var agendamentoExistente = await _agendamentoRepository.ObterAgendamentoPorId(id);
+
+            if (agendamentoExistente == null)
+            {
+                _log.WarnFormat("Tentativa de atualizar agendamento inexistente. ID: {0}", id);
+                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
+            }
+
+            agendamentoExistente.status = novoStatus.ToString();
+
+            var resultado = await _agendamentoRepository.Atualizar(agendamentoExistente);
+
+            _log.InfoFormat("Agendamento ID: {0} atualizado com sucesso.", id);
+
+            return await _agendamentoRepository.ListarAgendamentos();
+        }
+
+        public async Task Deletar(int agendamentoId)
+        {
+            _log.InfoFormat("Iniciando exclusão do agendamento ID: {0}", agendamentoId);
+
+            var agendamento = await _agendamentoRepository.ObterAgendamentoPorId(agendamentoId);
+
             await _agendamentoRepository.Deletar(agendamento);
             
             _log.InfoFormat("Agendamento ID: {0} deletado com sucesso.", agendamento.Id);
         }
 
-        public async Task Deletar(IEnumerable<Agendamento> agendamentos)
+        public async Task Deletar(IEnumerable<int> agendamentosIds)
         {
-            var agendamentosList = agendamentos.ToList();
-            
+            var agendamentosList = agendamentosIds.ToList();
             _log.InfoFormat("Iniciando exclusão de {0} agendamentos em lote.", agendamentosList.Count);
-            
-            await _agendamentoRepository.Deletar(agendamentosList);
+            var agendamentos = new List<Agendamento>();
+
+            foreach (var id in agendamentosList)
+            {
+                var agendamento = await _agendamentoRepository.ObterAgendamentoPorId(id);
+                if (agendamento == null)
+                {
+                    _log.WarnFormat("Agendamento com ID {0} não encontrado para exclusão em lote.", id);
+                    throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
+                }
+                agendamentos.Add(agendamento);
+            }
+
+            await _agendamentoRepository.Deletar(agendamentos);
             
             _log.InfoFormat("{0} agendamentos deletados com sucesso.", agendamentosList.Count);
         }
 
-        public async Task DeletarPorId(int id)
-        {
-            if (id <= 0)
-            {
-                _log.WarnFormat("Tentativa de deletar agendamento com ID inválido: {0}", id);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
-            }
-            
-            var agendamento = await _agendamentoRepository.ObterAgendamentoPorId(id);
-            
-            if (agendamento == null)
-            {
-                _log.WarnFormat("Tentativa de deletar agendamento inexistente. ID: {0}", id);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
-            }
-            
-            _log.InfoFormat("Iniciando exclusão do agendamento ID: {0}", id);
-            
-            await _agendamentoRepository.DeletarPorId(id);
-            
-            _log.InfoFormat("Agendamento ID: {0} deletado com sucesso.", id);
-        }
-
-        public async Task<List<Agendamento>> Todos()
-        {
-            _log.InfoFormat("Obtendo lista completa de agendamentos.");
-            
-            var agendamentos = await _agendamentoRepository.Todos();
-            
-            _log.InfoFormat("Total de {0} agendamentos recuperados.", agendamentos.Count);
-            
-            return agendamentos;
-        }
 
         public async Task ValidarAgendamento(DateOnly data, TimeOnly hora, int pacienteId)
         {

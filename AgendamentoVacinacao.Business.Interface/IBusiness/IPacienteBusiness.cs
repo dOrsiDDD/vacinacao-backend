@@ -1,5 +1,6 @@
 ﻿using AgendamentoVacinacao.Entities.DTO;
 using AgendamentoVacinacao.Entities.Entities;
+using AgendamentoVacinacao.Entities.Model;
 
 namespace AgendamentoVacinacao.Business.Interface.IBusiness
 {
@@ -7,16 +8,14 @@ namespace AgendamentoVacinacao.Business.Interface.IBusiness
     {
         // Métodos de Consulta Específicos
         Task<List<PacienteDTO>> ListarPacientes();
-        Task<Paciente> ObterPacientePorId(int id);
-        Task<Paciente> ObterPacientePorNome(string nome);
+        Task<PacienteDTO> ObterPacientePorId(int id);
+        Task<PacienteDTO> ObterPacientePorNome(string nome);
+        Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId);
 
         // Métodos do RepositorioBase
-        Task<Paciente> Inserir(Paciente paciente);
-        Task Inserir(IEnumerable<Paciente> pacientes);
-        Task<Paciente> Atualizar(Paciente paciente);
-        Task Deletar(Paciente paciente);
-        Task Deletar(IEnumerable<Paciente> pacientes);
-        Task DeletarPorId(int id);
-        Task<List<Paciente>> Todos();
+        Task<List<PacienteDTO>> Inserir(CadastroPacienteModel paciente);
+        Task<PacienteDTO> AtualizarDataNascimento(string nome, DateOnly novaDataNascimento);
+        Task<PacienteDTO> AtualizarNome(string nomeAntigo, string nomeNovo);
+        Task<List<PacienteDTO>> Deletar(int pacienteId);
     }
 }
