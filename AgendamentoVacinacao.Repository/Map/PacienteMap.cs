@@ -24,14 +24,10 @@ namespace AgendamentoVacinacao.Repository.Map
                    .HasColumnName("dat_nascimento")
                    .IsRequired();
 
+
             builder.Property(e => e.dataCriacao)
                    .HasColumnName("dat_criacao")
                    .IsRequired();
-
-            builder.HasMany(p => p.agendamentos)
-                   .WithOne(a => a.paciente)
-                   .HasForeignKey(a => a.idPaciente)
-                   .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     public class AgendamentoDTO
     {
+        public int id { get; set; }
         public int idPaciente { get; set; }
         public DateOnly dataAgendamento { get; set; }
         public TimeOnly horaAgendamento { get; set; }

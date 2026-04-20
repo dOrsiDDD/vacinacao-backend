@@ -22,7 +22,8 @@ namespace AgendamentoVacinacao.Repository.Map
 
             builder.Property(e => e.dataAgendamento)    
                    .HasColumnName("dat_agendamento")
-                   .IsRequired();
+                   .IsRequired()
+                   .HasColumnType("DATE");
 
             builder.Property(e => e.horaAgendamento)
                    .HasColumnName("hor_agendamento")
