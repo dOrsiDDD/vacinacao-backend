@@ -47,7 +47,6 @@ namespace AgendamentoVacinacao.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                InitializeDatabase(app);
             }
 
             app.UseSwagger();
@@ -68,15 +67,6 @@ namespace AgendamentoVacinacao.WebApi
             {
                 endpoints.MapControllers();
             });
-        }
-
-        private static void InitializeDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
-            {
-                var context = serviceScope.ServiceProvider.GetService<Contexto>();
-                context.Database.EnsureCreated();
-            }
         }
     }
 }

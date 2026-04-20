@@ -29,13 +29,13 @@ namespace AgendamentoVacinacao.WebApi.Controllers
             return await _agendamentoBusiness.ListarAgendamentos();
         }
 
-        [HttpGet("ConsultarAgendamentosPorDia")]
+        [HttpPost("ConsultarAgendamentosPorDia")]
         public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorDia(DateOnly dia)
         {
             return await _agendamentoBusiness.ConsultarAgendamentosPorDia(dia);
         }
 
-        [HttpGet("ConsultarAgendamentosPorHorario")]
+        [HttpPost("ConsultarAgendamentosPorHorario")]
         public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorHorario(DateTime horario)
         {
             return await _agendamentoBusiness.ConsultarAgendamentosPorHorario(horario);

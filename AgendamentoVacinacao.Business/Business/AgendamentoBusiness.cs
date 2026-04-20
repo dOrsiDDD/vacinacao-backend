@@ -76,16 +76,20 @@ namespace AgendamentoVacinacao.Business.Business
 
             var agendamentosExistentes = await _agendamentoRepository.ConsultarAgendamentosPorHorario(horario);
 
-            foreach (var agendamentoExistente in agendamentosExistentes)
-            {
-                if (agendamentoExistente.idPaciente == agendamento.idPaciente)
-                {
-                    _log.WarnFormat("O paciente {0} já está agendado para o horário selecionado", agendamento.idPaciente);
-                    throw new BusinessException(string.Format(BusinessMessages.PacienteJaAgendado, agendamento.idPaciente));
-                }
-            }
 
-            await ValidarAgendamento(agendamento.dataAgendamento, agendamento.horaAgendamento, agendamento.idPaciente);
+            if (agendamentosExistentes != null && agendamentosExistentes.Count > 0)
+            {
+                foreach (var agendamentoExistente in agendamentosExistentes)
+                {
+                    if (agendamentoExistente.idPaciente == agendamento.idPaciente)
+                    {
+                        _log.WarnFormat("O paciente {0} já está agendado para o horário selecionado", agendamento.idPaciente);
+                        throw new BusinessException(string.Format(BusinessMessages.PacienteJaAgendado, agendamento.idPaciente));
+                    }
+                }
+
+                await ValidarAgendamento(agendamento.dataAgendamento, agendamento.horaAgendamento, agendamento.idPaciente);
+            }
 
             var novoAgendamento = CriarAgendamento(agendamento);
 
