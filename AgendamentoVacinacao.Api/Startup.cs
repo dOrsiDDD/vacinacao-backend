@@ -1,5 +1,6 @@
 ﻿using AgendamentoVacinacao.WebApi.Configuration;
 using AgendamentoVacinacao.WebApi.Middleware;
+using AgendamentoVacinacao.Repository;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -15,9 +16,18 @@ namespace AgendamentoVacinacao.WebApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+                    options.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
+                });
 
             services.AddDependecyInjectionConfiguration(Configuracao);
+
+            services.AddDatabaseConfiguration(Configuracao);
+
+            services.AddFluentConfiguration();
 
             services.AddSwaggerGen(c =>
             {
@@ -37,6 +47,7 @@ namespace AgendamentoVacinacao.WebApi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                InitializeDatabase(app);
             }
 
             app.UseSwagger();
@@ -58,5 +69,15 @@ namespace AgendamentoVacinacao.WebApi
                 endpoints.MapControllers();
             });
         }
+
+        private static void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetService<Contexto>();
+                context.Database.EnsureCreated();
+            }
+        }
     }
 }
+

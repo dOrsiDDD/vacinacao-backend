@@ -76,6 +76,7 @@ namespace AgendamentoVacinacao.Repository.Repositories
         {
             return new AgendamentoDTO
             {
+                id = agendamento.Id,
                 idPaciente = agendamento.idPaciente,
                 dataAgendamento = agendamento.dataAgendamento,
                 horaAgendamento = agendamento.horaAgendamento,

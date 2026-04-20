@@ -67,12 +67,14 @@ namespace AgendamentoVacinacao.Repository.Repositories
         {
             return new PacienteDTO
             {
+                id = paciente.Id,
                 nome = paciente.nome,
                 dataNascimento = paciente.dataNascimento,
                 dataCriacao = paciente.dataCriacao,
                 agendamentos = paciente.agendamentos
                     .Select(a => new AgendamentoDTO
                     {
+                        id = a.Id,
                         idPaciente = a.idPaciente,
                         dataAgendamento = a.dataAgendamento,
                         horaAgendamento = a.horaAgendamento,

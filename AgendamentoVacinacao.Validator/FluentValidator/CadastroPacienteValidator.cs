@@ -12,7 +12,7 @@ namespace AgendamentoVacinacao.Validator.FluentValidator
                 .NotNull()
                 .WithMessage(string.Format(BusinessMessages.CampoObrigatorio, "Nome do paciente"))
                 .NotEmpty()
-                .WithMessage(string.Format(BusinessMessages.CampoObrigatorio, "Nome do paciente"))
+                .WithMessage(string.Format(BusinessMessages.CampoObrigatorio, "Nome do paciente"));
 
             RuleFor(paciente => paciente.dataNascimento)
                 .NotEmpty()
