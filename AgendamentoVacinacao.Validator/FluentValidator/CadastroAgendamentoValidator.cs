@@ -12,7 +12,7 @@ namespace AgendamentoVacinacao.Validator.FluentValidator
                 .NotEmpty()
                 .WithMessage(string.Format(BusinessMessages.CampoObrigatorio, "ID do paciente"))
                 .GreaterThan(0)
-                .WithMessage(string.Format(BusinessMessages.IdInvalido));
+                .WithMessage(agendamento => string.Format(BusinessMessages.IdInvalido, agendamento.idPaciente));
 
             RuleFor(agendamento => agendamento.dataAgendamento)
                 .NotEmpty()

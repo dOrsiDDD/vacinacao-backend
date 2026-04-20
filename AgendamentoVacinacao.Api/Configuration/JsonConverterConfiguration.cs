@@ -24,7 +24,7 @@ namespace AgendamentoVacinacao.WebApi.Configuration
 
     public class TimeOnlyJsonConverter : JsonConverter<TimeOnly>
     {
-        private const string Format = "HH:mm:ss";
+        private const string Format = "HH:mm";
 
         public override TimeOnly Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
