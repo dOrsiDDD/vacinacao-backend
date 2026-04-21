@@ -7,6 +7,7 @@ using AgendamentoVacinacao.Repository.Repositories;
 using AgendamentoVacinacao.Utilities.Exceptions;
 using AgendamentoVacinacao.Utilities.Messages;
 using log4net;
+using System.Drawing;
 
 namespace AgendamentoVacinacao.Business.Business
 {
@@ -51,19 +52,30 @@ namespace AgendamentoVacinacao.Business.Business
             return await _pacienteRepository.ConsultarPaciente(id);
         }
 
-        public async Task<PacienteDTO> ObterPacientePorNome(string nome)
+        public async Task<List<PacienteDTO>> ObterPacientesPorNome(string nome)
         {
-            var paciente = await _pacienteRepository.ObterPacientePorNome(nome);
+            var pacientes = await _pacienteRepository.ObterPacientesPorNome(nome);
 
-            if (paciente == null)
+            if (pacientes == null || pacientes.Count == 0)
             {
                 _log.InfoFormat("Paciente com nome '{0}' não encontrado.", nome);
                 throw new BusinessException(string.Format(BusinessMessages.NomeInvalido, nome));
             }
 
-            _log.InfoFormat("Paciente com nome '{0}' obtido com sucesso. ID: {1}", nome, paciente.Id);
+            _log.InfoFormat("Pacientes com nome '{0}' obtidos com sucesso. Total: {1}", nome, pacientes.Count);
 
-            return await _pacienteRepository.ConsultarPaciente(paciente.Id);
+            var pacientesDTO = new List<PacienteDTO>();
+
+            foreach (var paciente in pacientes)
+            {
+                var pacienteDTO = await _pacienteRepository.ConsultarPaciente(paciente.Id);
+                if (pacienteDTO != null)
+                {
+                    pacientesDTO.Add(pacienteDTO);
+                }
+            }
+
+            return pacientesDTO;
         }
 
         public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId)
@@ -76,7 +88,7 @@ namespace AgendamentoVacinacao.Business.Business
             }
 
             var agendamentos = await _pacienteRepository.ObterAgendamentosPorPaciente(pacienteId);
-            
+
             return agendamentos;
         }
 
@@ -85,21 +97,15 @@ namespace AgendamentoVacinacao.Business.Business
         {
             _log.InfoFormat("Iniciando inserção de novo paciente. Nome: {0}", novoPaciente.nome);
 
-            var paciente = await _pacienteRepository.ObterPacientePorNome(novoPaciente.nome);
+            ValidarDataNascimento(novoPaciente.dataNascimento);
 
-            if (paciente != null)
-            {
-                _log.WarnFormat("Tentativa de inserir paciente com nome já existente: {0}", novoPaciente.nome);
-                throw new BusinessException(string.Format(BusinessMessages.RegistroExistente, novoPaciente.nome));
-            }
-
-            paciente = CriarPaciente(novoPaciente);
+            var paciente = CriarPaciente(novoPaciente);
 
 
             var resultado = await _pacienteRepository.Inserir(paciente);
-            
+
             _log.InfoFormat("Paciente inserido com sucesso. ID: {0}, Nome: {1}", resultado.Id, resultado.nome);
-            
+
             return await _pacienteRepository.ListarPacientes();
         }
 
@@ -114,40 +120,42 @@ namespace AgendamentoVacinacao.Business.Business
             return paciente;
         }
 
-        public async Task<PacienteDTO> AtualizarDataNascimento(string nome, DateOnly novaDataNascimento)
+        public async Task<PacienteDTO> AtualizarDataNascimento(int pacienteId, DateOnly novaDataNascimento)
         {
-            _log.InfoFormat("Iniciando atualização do paciente Nome: {0}", nome);
-            
-            var pacienteExistente = await _pacienteRepository.ObterPacientePorNome(nome);
-            
+            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", pacienteId);
+
+            ValidarDataNascimento(novaDataNascimento);
+
+            var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+
             if (pacienteExistente == null)
             {
-                _log.WarnFormat("Tentativa de atualizar paciente inexistente. Nome: {0}", nome);
-                throw new BusinessException($"Paciente com Nome {nome} não encontrado.");
+                _log.WarnFormat("Tentativa de atualizar paciente inexistente. ID: {0}", pacienteId);
+                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
             }
-            
+
             pacienteExistente.dataNascimento = novaDataNascimento;
             var resultado = await _pacienteRepository.Atualizar(pacienteExistente);
-            
+
             _log.InfoFormat("Paciente de nome: {0} atualizado com sucesso.", pacienteExistente.nome);
             return await ObterPacientePorId(pacienteExistente.Id);
         }
 
-        public async Task<PacienteDTO> AtualizarNome(string nomeAntigo, string nomeNovo)
+        public async Task<PacienteDTO> AtualizarNome(int pacienteId, string nomeNovo)
         {
-            _log.InfoFormat("Iniciando atualização do paciente Nome: {0}", nomeAntigo);
-            
-            var pacienteExistente = await _pacienteRepository.ObterPacientePorNome(nomeAntigo);
-            
+            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", pacienteId);
+
+            var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+
             if (pacienteExistente == null)
             {
-                _log.WarnFormat("Tentativa de atualizar paciente inexistente. Nome: {0}", nomeAntigo);
-                throw new BusinessException($"Paciente com Nome {nomeAntigo} não encontrado.");
+                _log.WarnFormat("Tentativa de atualizar paciente inexistente. ID: {0}", pacienteId);
+                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
             }
-            
+
             pacienteExistente.nome = nomeNovo;
             var resultado = await _pacienteRepository.Atualizar(pacienteExistente);
-            
+
             _log.InfoFormat("Paciente de nome: {0} atualizado com sucesso.", pacienteExistente.nome);
             return await ObterPacientePorId(pacienteExistente.Id);
         }
@@ -155,7 +163,7 @@ namespace AgendamentoVacinacao.Business.Business
         public async Task<List<PacienteDTO>> Deletar(int pacienteId)
         {
             var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
-            
+
             if (pacienteExistente == null)
             {
                 _log.WarnFormat("Tentativa de deletar paciente inexistente. ID: {0}", pacienteId);
@@ -167,6 +175,21 @@ namespace AgendamentoVacinacao.Business.Business
             _log.InfoFormat("Paciente ID: {0} deletado com sucesso.", pacienteId);
 
             return await _pacienteRepository.ListarPacientes();
+        }
+
+        public void ValidarDataNascimento(DateOnly dataNascimento)
+        {
+            if (dataNascimento > DateOnly.FromDateTime(DateTime.Now))
+            {
+                _log.WarnFormat("Data de nascimento inválida: {0}", dataNascimento);
+                throw new BusinessException(BusinessMessages.DataNascimentoFuturo);
+            }
+
+            if (dataNascimento < new DateOnly(1900, 1, 1))
+            {
+                _log.WarnFormat("Data de nascimento muito antiga: {0}", dataNascimento);
+                throw new BusinessException(BusinessMessages.DataNascimentoInvalida);
+            }
         }
     }
 }

@@ -36,9 +36,9 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpGet("ConsultarPacientePorNome")]
-        public async Task<PacienteDTO> ConsultarPacientePorNome(string nome)
+        public async Task<List<PacienteDTO>> ConsultarPacientesPorNome(string nome)
         {
-            return await _pacienteBusiness.ObterPacientePorNome(nome);
+            return await _pacienteBusiness.ObterPacientesPorNome(nome);
         }
 
         [HttpDelete("DeletarPaciente")]
@@ -48,15 +48,15 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpPut("AtualizarDataNascimento")]
-        public async Task<PacienteDTO> AtualizarDataNascimento(string nome, DateOnly novaDataNascimento)
+        public async Task<PacienteDTO> AtualizarDataNascimento(int id, DateOnly novaDataNascimento)
         {
-            return await _pacienteBusiness.AtualizarDataNascimento(nome, novaDataNascimento);
+            return await _pacienteBusiness.AtualizarDataNascimento(id, novaDataNascimento);
         }
 
         [HttpPut("AtualizarNome")]
-        public async Task<PacienteDTO> AtualizarNome(string nomeAntigo, string nomeNovo)
+        public async Task<PacienteDTO> AtualizarNome(int id, string nomeNovo)
         {
-            return await _pacienteBusiness.AtualizarNome(nomeAntigo, nomeNovo);
+            return await _pacienteBusiness.AtualizarNome(id, nomeNovo);
         }
     }
 }

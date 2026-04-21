@@ -27,12 +27,13 @@ namespace AgendamentoVacinacao.Repository.Repositories
             return paciente;
         }
 
-        public async Task<Paciente> ObterPacientePorNome(string nome)
+        public async Task<List<Paciente>> ObterPacientesPorNome(string nome)
         {
-            var paciente = await EntitySet.Include(p => p.agendamentos)
-                                          .FirstOrDefaultAsync(p => p.nome == nome);
+            var pacientes = await EntitySet.Include(p => p.agendamentos)
+                                           .Where(p => p.nome.ToLower() == nome.ToLower())
+                                           .ToListAsync();
 
-            return paciente;
+            return pacientes;
         }
 
         public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId)

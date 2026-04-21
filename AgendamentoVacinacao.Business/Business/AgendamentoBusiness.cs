@@ -9,6 +9,7 @@ using AgendamentoVacinacao.Utilities.Constants;
 using log4net;
 using AgendamentoVacinacao.Entities.Model;
 using System.Drawing;
+using System.Runtime.ExceptionServices;
 
 namespace AgendamentoVacinacao.Business.Business
 {
@@ -190,13 +191,17 @@ namespace AgendamentoVacinacao.Business.Business
 
         public async Task ValidarAgendamento(DateOnly data, TimeOnly hora, int pacienteId)
         {
+            var exceptions = new List<string>();
+
             if (data < DateOnly.FromDateTime(DateTime.Now))
-                throw new BusinessException(string.Format(BusinessMessages.DataPassada));
+            {
+                exceptions.Add(string.Format(BusinessMessages.DataPassada));
+            }
 
             if (hora.Minute != 0)
             {
                 _log.WarnFormat("Tentativa de agendamento em horário inválido: {0}", hora);
-                throw new BusinessException(string.Format(BusinessMessages.HorarioInvalido, hora));
+                exceptions.Add(string.Format(BusinessMessages.HorarioInvalido, hora));
             }
 
             var agendamentosDoDia = await _agendamentoRepository.ConsultarAgendamentosPorDia(data);
@@ -204,7 +209,7 @@ namespace AgendamentoVacinacao.Business.Business
             if (agendamentosDoDia.Count >= BusinessConstants.MAX_AGENDAMENTOS_POR_DIA)
             {
                 _log.WarnFormat("Tentativa de agendamento excedendo limite diário. Data: {0}, Agendamentos: {1}", data, agendamentosDoDia.Count);
-                throw new BusinessException(string.Format(BusinessMessages.DiaEsgotado, BusinessConstants.MAX_AGENDAMENTOS_POR_DIA));
+                exceptions.Add(string.Format(BusinessMessages.DiaEsgotado, BusinessConstants.MAX_AGENDAMENTOS_POR_DIA));
             }
 
             var agendamentosNoHorario = agendamentosDoDia
@@ -214,7 +219,12 @@ namespace AgendamentoVacinacao.Business.Business
             if (agendamentosNoHorario.Count >= BusinessConstants.MAX_AGENDAMENTOS_POR_HORARIO)
             {
                 _log.WarnFormat("Tentativa de agendamento excedendo limite horário. Data: {0}, Hora: {1}, Agendamentos: {2}", data, hora, agendamentosNoHorario.Count);
-                throw new BusinessException(string.Format(BusinessMessages.HorarioEsgotado, BusinessConstants.MAX_AGENDAMENTOS_POR_HORARIO));
+                exceptions.Add(string.Format(BusinessMessages.HorarioEsgotado, BusinessConstants.MAX_AGENDAMENTOS_POR_HORARIO));
+            }
+
+            if (exceptions.Any())
+            {
+                throw new BusinessListException(exceptions);
             }
         }
     }
