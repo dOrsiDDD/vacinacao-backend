@@ -25,6 +25,12 @@ namespace AgendamentoVacinacao.WebApi.Controllers
             return await _pacienteBusiness.Inserir(novoPaciente);
         }
 
+        [HttpGet("ListarPacientes")]
+        public async Task<List<PacienteDTO>> ListarPacientes()
+        {
+            return await _pacienteBusiness.ListarPacientes();
+        }
+
         [HttpGet("ConsultarAgendamentoPorPaciente")]
         public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorPaciente(string cpf)
         {
