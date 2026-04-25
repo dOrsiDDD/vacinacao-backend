@@ -1,6 +1,5 @@
 ﻿using AgendamentoVacinacao.WebApi.Configuration;
 using AgendamentoVacinacao.WebApi.Middleware;
-using AgendamentoVacinacao.Repository;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 
@@ -28,6 +27,7 @@ namespace AgendamentoVacinacao.WebApi
             services.AddDatabaseConfiguration(Configuracao);
 
             services.AddFluentConfiguration();
+            services.AddAutorizacaoConfiguration(Configuracao);
 
             services.AddSwaggerGen(c =>
             {
@@ -57,6 +57,8 @@ namespace AgendamentoVacinacao.WebApi
             });
 
             app.UseRouting();
+
+            app.UseCors("CORS_POLICY");
 
             app.UseAuthentication();
             app.UseAuthorization();
