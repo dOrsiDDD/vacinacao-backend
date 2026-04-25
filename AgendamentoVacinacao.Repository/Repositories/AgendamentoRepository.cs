@@ -72,6 +72,15 @@ namespace AgendamentoVacinacao.Repository.Repositories
             return agendamento;
         }
 
+        public async Task<AgendamentoDTO> ConsultarAgendamentoPorId(int id)
+        {
+            var agendamento = await EntitySet.Include(a => a.paciente)
+                                             .FirstOrDefaultAsync(a => a.Id == id);
+            var agendamentoDTO = MapToDTO(agendamento);
+
+            return agendamentoDTO;
+        }
+
         private static AgendamentoDTO MapToDTO(Agendamento agendamento)
         {
             return new AgendamentoDTO

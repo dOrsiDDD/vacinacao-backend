@@ -248,34 +248,6 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             Assert.DoesNotThrowAsync(action);
         }
 
-        [Test]
-        public async Task ObterAgendamentoPorId_Sucesso()
-        {
-            // Arrange
-            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
-            _contexto.Add(agendamento);
-            await _contexto.SaveChangesAsync();
-
-            // Act
-            async Task action() => await _negocio.ObterAgendamentoPorId(agendamento.Id);
-
-            // Assert
-            Assert.DoesNotThrowAsync(action);
-        }
-
-        [TestCase(0)]
-        [TestCase(-1)]
-        [TestCase(999)]
-        public void ObterAgendamentoPorId_IdInvalido_LancaExcecao(int idInvalido)
-        {
-            // Act
-            async Task action() => await _negocio.ObterAgendamentoPorId(idInvalido);
-
-            // Assert
-            var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, idInvalido));
-        }
-
         // --- TESTES DE UPDATE (ATUALIZAR) ---
 
         [Test]

@@ -20,7 +20,7 @@ namespace AgendamentoVacinacao.WebApi.Controllers
 
         [HttpPost("CadastrarAgendamento")]
         [TransacaoObrigatoria]
-        public async Task<List<AgendamentoDTO>> CadastrarAgendamento(CadastroAgendamentoModel novoAgendamento)
+        public async Task<AgendamentoDTO> CadastrarAgendamento(CadastroAgendamentoModel novoAgendamento)
         {
             return await _agendamentoBusiness.Inserir(novoAgendamento);
         }

@@ -50,33 +50,13 @@ namespace AgendamentoVacinacao.Business.Business
             return await _agendamentoRepository.FiltrarAgendamentos(status);
         }
 
-        public async Task<Agendamento> ObterAgendamentoPorId(int id)
-        {
-            if (id <= 0)
-            {
-                _log.WarnFormat("Tentativa de obter agendamento com ID inválido: {0}", id);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
-            }
-
-            var agendamento = await _agendamentoRepository.ObterAgendamentoPorId(id);
-
-            if (agendamento == null)
-            {
-                _log.InfoFormat("Agendamento com ID {0} não encontrado.", id);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
-            }
-
-            return agendamento;
-        }
-
-        public async Task<List<AgendamentoDTO>> Inserir(CadastroAgendamentoModel agendamento)
+        public async Task<AgendamentoDTO> Inserir(CadastroAgendamentoModel agendamento)
         {
             _log.InfoFormat("Iniciando inserção de novo agendamento para paciente ID: {0}, Data: {1}, Hora: {2}", agendamento.idPaciente, agendamento.dataAgendamento, agendamento.horaAgendamento);
 
             DateTime horario = agendamento.dataAgendamento.ToDateTime(agendamento.horaAgendamento);
 
             var agendamentosExistentes = await _agendamentoRepository.ConsultarAgendamentosPorHorario(horario);
-
 
             if (agendamentosExistentes != null && agendamentosExistentes.Count > 0)
             {
@@ -94,9 +74,18 @@ namespace AgendamentoVacinacao.Business.Business
 
             var novoAgendamento = CriarAgendamento(agendamento);
 
-            await _agendamentoRepository.Inserir(novoAgendamento);
+            var agendamentoInserido = await _agendamentoRepository.Inserir(novoAgendamento);
+            var agendamentoInseridoDTO = new AgendamentoDTO
+            {
+                id = agendamentoInserido.Id,
+                idPaciente = agendamentoInserido.idPaciente,
+                dataAgendamento = agendamentoInserido.dataAgendamento,
+                horaAgendamento = agendamentoInserido.horaAgendamento,
+                status = agendamentoInserido.status,
+                dataCriacao = agendamentoInserido.dataCriacao
+            };
 
-            return await _agendamentoRepository.ListarAgendamentos();
+            return agendamentoInseridoDTO;
         }
 
         private static Agendamento CriarAgendamento(CadastroAgendamentoModel agendamentoModel)
