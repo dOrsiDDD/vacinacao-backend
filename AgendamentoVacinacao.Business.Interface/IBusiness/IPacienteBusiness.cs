@@ -13,7 +13,7 @@ namespace AgendamentoVacinacao.Business.Interface.IBusiness
         Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(string cpf);
 
         // Métodos do RepositorioBase
-        Task<List<PacienteDTO>> Inserir(CadastroPacienteModel paciente);
+        Task<PacienteDTO> Inserir(CadastroPacienteModel paciente);
         Task<PacienteDTO> AtualizarDataNascimento(string cpf, DateOnly novaDataNascimento);
         Task<PacienteDTO> AtualizarNome(string cpf, string nomeNovo);
         Task<List<PacienteDTO>> Deletar(string cpf);
