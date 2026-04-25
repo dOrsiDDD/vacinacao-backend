@@ -38,6 +38,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             var novoPaciente = new CadastroPacienteModel
             {
                 nome = "João da Silva",
+                cpf = "41445406420",
                 dataNascimento = new DateOnly(1990, 1, 1)
             };
 
@@ -55,8 +56,8 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task ListarPacientes_Sucesso()
         {
             // Arrange
-            _contexto.Add(new Paciente { nome = "Paciente 1", dataNascimento = new DateOnly(2000, 1, 1), dataCriacao = DateTime.Now });
-            _contexto.Add(new Paciente { nome = "Paciente 2", dataNascimento = new DateOnly(2001, 1, 1), dataCriacao = DateTime.Now });
+            _contexto.Add(new Paciente { nome = "Paciente 1", cpf = "31081862807", dataNascimento = new DateOnly(2000, 1, 1), dataCriacao = DateTime.Now });
+            _contexto.Add(new Paciente { nome = "Paciente 2", cpf = "04777445402", dataNascimento = new DateOnly(2001, 1, 1), dataCriacao = DateTime.Now });
             await _contexto.SaveChangesAsync();
 
             // Act
@@ -67,32 +68,34 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         }
 
         [Test]
-        public async Task ObterPacientePorId_Sucesso()
+        public async Task ObterPacientePorCPF_Sucesso()
         {
             // Arrange
-            var paciente = new Paciente { nome = "Carlos", dataNascimento = new DateOnly(1980, 10, 10), dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = "Carlos", cpf = "26208784620", dataNascimento = new DateOnly(1980, 10, 10), dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             await _contexto.SaveChangesAsync();
 
             // Act
-            async Task action() => await _negocio.ObterPacientePorId(paciente.Id);
+            async Task action() => await _negocio.ObterPacientePorCPF(paciente.cpf);
 
             // Assert
             Assert.DoesNotThrowAsync(action);
         }
 
-        [TestCase(0)]
-        [TestCase(999)]
-        public void ObterPacientePorId_Inexistente_LancaExcecao(int idInvalido)
+        [TestCase("06631299748")]
+        [TestCase("00000000000")]
+        [TestCase("CPF Invalido")]
+        [TestCase("81322222222")]
+        public void ObterPacientePorCPF_Inexistente_LancaExcecao(string cpfInvalido)
         {
             // Arrange
 
             // Act
-            async Task action() => await _negocio.ObterPacientePorId(idInvalido);
+            async Task action() => await _negocio.ObterPacientePorCPF(cpfInvalido);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, idInvalido));
+            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.CPFInvalido, cpfInvalido));
         }
 
         [Test]
@@ -100,7 +103,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         {
             // Arrange
             var nomeBusca = "Ana";
-            var paciente = new Paciente { nome = nomeBusca, dataNascimento = new DateOnly(1992, 12, 12), dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = nomeBusca, cpf = "13049932643", dataNascimento = new DateOnly(1992, 12, 12), dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             await _contexto.SaveChangesAsync();
 
@@ -117,7 +120,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public void ObterPacientePorNome_Inexistente_LancaExcecao(string nomeInvalido)
         {
             // Arrange
-            _contexto.Add(new Paciente { nome = "Paciente Real", dataNascimento = new DateOnly(1990, 1, 1), dataCriacao = DateTime.Now });
+            _contexto.Add(new Paciente { nome = "Paciente Real", cpf = "15607725812", dataNascimento = new DateOnly(1990, 1, 1), dataCriacao = DateTime.Now });
             _contexto.SaveChanges();
 
             // Act
@@ -135,6 +138,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             var paciente = new Paciente
             {
                 nome = "Roberto",
+                cpf = "04364885665",
                 dataNascimento = new DateOnly(1975, 8, 8),
                 dataCriacao = DateTime.Now
             };
@@ -151,21 +155,24 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             await _contexto.SaveChangesAsync();
 
             // Act
-            async Task action() => await _negocio.ObterAgendamentosPorPaciente(paciente.Id);
+            async Task action() => await _negocio.ObterAgendamentosPorPaciente(paciente.cpf);
 
             // Assert
             Assert.DoesNotThrowAsync(action);
         }
 
 
-        [TestCase(999)]
-        [TestCase(0)]
-        public void ObterAgendamentosPorPaciente_Inexistente_LancaExcecao(int idInvalido)
+        [TestCase("06631299748")]
+        [TestCase("00000000000")]
+        [TestCase("CPF Invalido")]
+        [TestCase("81322222222")]
+        public void ObterAgendamentosPorPaciente_Inexistente_LancaExcecao(string cpfInvalido)
         {
             // Arrange
             var paciente = new Paciente
             {
                 nome = "Paciente",
+                cpf = "140.581.438-19",
                 dataNascimento = new DateOnly(1995, 5, 5),
                 dataCriacao = DateTime.Now
             };
@@ -173,11 +180,11 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             _contexto.SaveChanges();
 
             // Act
-            async Task action() => await _negocio.ObterAgendamentosPorPaciente(idInvalido);
+            async Task action() => await _negocio.ObterAgendamentosPorPaciente(cpfInvalido);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, idInvalido));
+            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.CPFInvalido, cpfInvalido));
         }
 
         // --- TESTES DE UPDATE (ATUALIZAR) ---
@@ -188,32 +195,34 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             // Arrange
             var nomeAntigo = "Fernanda";
             var nomeNovo = "Fernanda Silva";
-            var paciente = new Paciente { nome = nomeAntigo, dataNascimento = new DateOnly(1988, 4, 4), dataCriacao = DateTime.Now };
+            var cpf = "04173598610";
+            var paciente = new Paciente { nome = nomeAntigo, cpf = cpf, dataNascimento = new DateOnly(1988, 4, 4), dataCriacao = DateTime.Now };
 
             _contexto.Add(paciente);
             await _contexto.SaveChangesAsync();
 
             // Act
-            async Task action() => await _negocio.AtualizarNome(paciente.Id, nomeNovo);
+            async Task action() => await _negocio.AtualizarNome(paciente.cpf, nomeNovo);
 
             // Assert
             Assert.DoesNotThrowAsync(action);
         }
 
-        [TestCase(0)]
-        [TestCase(999)]
-        //[TestCase(null)]
-        public void AtualizarNome_Inexistente_LancaExcecao(int pacienteId)
+        [TestCase("06631299748")]
+        [TestCase("00000000000")]
+        [TestCase("CPF Invalido")]
+        [TestCase("81322222222")]
+        public void AtualizarNome_Inexistente_LancaExcecao(string cpf)
         {
             // Arrange
             var nomeNovo = "Novo Nome";
 
             // Act
-            async Task action() => await _negocio.AtualizarNome(pacienteId, nomeNovo);
+            async Task action() => await _negocio.AtualizarNome(cpf, nomeNovo);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, pacienteId));
+            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.CPFInvalido, cpf));
         }
 
         [Test]
@@ -221,34 +230,36 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         {
             // Arrange
             var nomePaciente = "Lucas";
+            var cpf = "06752340692";
             var dataAntiga = new DateOnly(1990, 1, 1);
             var dataNova = new DateOnly(1991, 2, 2);
-            var paciente = new Paciente { nome = nomePaciente, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = nomePaciente, cpf = cpf, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
 
             _contexto.Add(paciente);
             await _contexto.SaveChangesAsync();
 
             // Act
-            async Task action() => await _negocio.AtualizarDataNascimento(paciente.Id, dataNova);
+            async Task action() => await _negocio.AtualizarDataNascimento(paciente.cpf, dataNova);
 
             // Assert
             Assert.DoesNotThrowAsync(action);
         }
 
-        [TestCase(0)]
-        [TestCase(999)]
-        //[TestCase(null)]
-        public void AtualizarDataNascimento_IdInvalido_LancaExcecao(int pacienteId)
+        [TestCase("06631299748")]
+        [TestCase("00000000000")]
+        [TestCase("CPF Invalido")]
+        [TestCase("81322222222")]
+        public void AtualizarDataNascimento_cpfInvalido_LancaExcecao(string cpf)
         {
             // Arrange
             var dataNova = new DateOnly(2000, 1, 1);
 
             // Act
-            async Task action() => await _negocio.AtualizarDataNascimento(pacienteId, dataNova);
+            async Task action() => await _negocio.AtualizarDataNascimento(cpf, dataNova);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, pacienteId));
+            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.CPFInvalido, cpf));
         }
 
         [Test]
@@ -257,12 +268,13 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             // Arrange
             var nomePaciente = "Mariana";
             var dataAntiga = new DateOnly(1990, 1, 1);
+            var cpf = "07325503601";
             var dataFutura = DateOnly.FromDateTime(DateTime.Today.AddDays(1));
-            var paciente = new Paciente { nome = nomePaciente, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = nomePaciente, cpf = cpf, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             _contexto.SaveChanges();
             // Act
-            async Task action() => await _negocio.AtualizarDataNascimento(paciente.Id, dataFutura);
+            async Task action() => await _negocio.AtualizarDataNascimento(paciente.cpf, dataFutura);
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
             Assert.IsTrue(exception.Message == BusinessMessages.DataNascimentoFuturo);
@@ -274,13 +286,14 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             // Arrange
             var nomePaciente = "Mariana";
             var dataAntiga = new DateOnly(1990, 1, 1);
+            var cpf = "42335388649";
             var dataInvalida = new DateOnly(1899, 12, 31);
-            var paciente = new Paciente { nome = nomePaciente, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = nomePaciente, cpf = cpf, dataNascimento = dataAntiga, dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             _contexto.SaveChanges();
 
             // Act
-            async Task action() => await _negocio.AtualizarDataNascimento(paciente.Id, dataInvalida);
+            async Task action() => await _negocio.AtualizarDataNascimento(paciente.cpf, dataInvalida);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
@@ -293,32 +306,34 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task Deletar_Sucesso()
         {
             // Arrange
-            var paciente = new Paciente { nome = "Paciente Deletar", dataNascimento = new DateOnly(1980, 1, 1), dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = "Paciente Deletar", cpf = "70200360663", dataNascimento = new DateOnly(1980, 1, 1), dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             await _contexto.SaveChangesAsync();
 
             // Act
-            async Task action() => await _negocio.Deletar(paciente.Id);
+            async Task action() => await _negocio.Deletar(paciente.cpf);
 
             // Assert
             Assert.DoesNotThrowAsync(action);
         }
 
-        [TestCase(0)]
-        [TestCase(999)]
-        public void Deletar_Inexistente_LancaExcecao(int idInvalido)
+        [TestCase("06631299748")]
+        [TestCase("00000000000")]
+        [TestCase("CPF Invalido")]
+        [TestCase("81322222222")]
+        public void Deletar_Inexistente_LancaExcecao(string cpfInvalido)
         {
             // Arrange
-            var paciente = new Paciente { nome = "Paciente", dataNascimento = new DateOnly(1980, 1, 1), dataCriacao = DateTime.Now };
+            var paciente = new Paciente { nome = "Paciente", cpf = "04516584697", dataNascimento = new DateOnly(1980, 1, 1), dataCriacao = DateTime.Now };
             _contexto.Add(paciente);
             _contexto.SaveChanges();
 
             // Act
-            async Task action() => await _negocio.Deletar(idInvalido);
+            async Task action() => await _negocio.Deletar(cpfInvalido);
 
             // Assert
             var exception = Assert.ThrowsAsync<BusinessException>(action);
-            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.IdInvalido, idInvalido));
+            Assert.IsTrue(exception.Message == string.Format(BusinessMessages.CPFInvalido, cpfInvalido));
         }
     }
 }

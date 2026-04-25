@@ -8,14 +8,14 @@ namespace AgendamentoVacinacao.Business.Interface.IBusiness
     {
         // Métodos de Consulta Específicos
         Task<List<PacienteDTO>> ListarPacientes();
-        Task<PacienteDTO> ObterPacientePorId(int id);
+        Task<PacienteDTO> ObterPacientePorCPF(string cpf);
         Task<List<PacienteDTO>> ObterPacientesPorNome(string nome);
-        Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId);
+        Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(string cpf);
 
         // Métodos do RepositorioBase
         Task<List<PacienteDTO>> Inserir(CadastroPacienteModel paciente);
-        Task<PacienteDTO> AtualizarDataNascimento(int pacienteId, DateOnly novaDataNascimento);
-        Task<PacienteDTO> AtualizarNome(int pacienteId, string nomeNovo);
-        Task<List<PacienteDTO>> Deletar(int pacienteId);
+        Task<PacienteDTO> AtualizarDataNascimento(string cpf, DateOnly novaDataNascimento);
+        Task<PacienteDTO> AtualizarNome(string cpf, string nomeNovo);
+        Task<List<PacienteDTO>> Deletar(string cpf);
     }
 }

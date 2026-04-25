@@ -24,15 +24,15 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpGet("ConsultarAgendamentoPorPaciente")]
-        public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorPaciente(int id)
+        public async Task<List<AgendamentoDTO>> ConsultarAgendamentosPorPaciente(string cpf)
         {
-            return await _pacienteBusiness.ObterAgendamentosPorPaciente(id);
+            return await _pacienteBusiness.ObterAgendamentosPorPaciente(cpf);
         }
 
-        [HttpGet("ConsultarPacientePorId")]
-        public async Task<PacienteDTO> ConsultarPacientePorId(int id)
+        [HttpGet("ConsultarPacientePorCPF")]
+        public async Task<PacienteDTO> ConsultarPacientePorCPF(string cpf)
         {
-            return await _pacienteBusiness.ObterPacientePorId(id);
+            return await _pacienteBusiness.ObterPacientePorCPF(cpf);
         }
 
         [HttpGet("ConsultarPacientePorNome")]
@@ -42,21 +42,21 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpDelete("DeletarPaciente")]
-        public async Task<List<PacienteDTO>> DeletarPaciente(int id)
+        public async Task<List<PacienteDTO>> DeletarPaciente(string cpf)
         {
-            return await _pacienteBusiness.Deletar(id);
+            return await _pacienteBusiness.Deletar(cpf);
         }
 
         [HttpPut("AtualizarDataNascimento")]
-        public async Task<PacienteDTO> AtualizarDataNascimento(int id, DateOnly novaDataNascimento)
+        public async Task<PacienteDTO> AtualizarDataNascimento(string cpf, DateOnly novaDataNascimento)
         {
-            return await _pacienteBusiness.AtualizarDataNascimento(id, novaDataNascimento);
+            return await _pacienteBusiness.AtualizarDataNascimento(cpf, novaDataNascimento);
         }
 
         [HttpPut("AtualizarNome")]
-        public async Task<PacienteDTO> AtualizarNome(int id, string nomeNovo)
+        public async Task<PacienteDTO> AtualizarNome(string cpf, string nomeNovo)
         {
-            return await _pacienteBusiness.AtualizarNome(id, nomeNovo);
+            return await _pacienteBusiness.AtualizarNome(cpf, nomeNovo);
         }
     }
 }

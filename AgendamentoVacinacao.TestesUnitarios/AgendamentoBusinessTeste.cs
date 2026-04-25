@@ -34,7 +34,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task OneTimeSetUp()
         {
             // Cria um paciente base para satisfazer a chave estrangeira dos agendamentos
-            _pacienteBase = new Paciente { nome = "Paciente Padrão", dataNascimento = new DateOnly(1990, 1, 1), dataCriacao = DateTime.Now };
+            _pacienteBase = new Paciente { nome = "Paciente Padrão", cpf = "41445406420", dataNascimento = new DateOnly(1990, 1, 1), dataCriacao = DateTime.Now };
             _contexto.Add(_pacienteBase);
             _contexto.SaveChanges();
         }

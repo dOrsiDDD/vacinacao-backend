@@ -153,4 +153,10 @@
   <data name="PacienteJaAgendado" xml:space="preserve">
     <value>O paciente {0} já se encontra agendado para o horário selecionado.</value>
   </data>
+  <data name="CPFInvalido" xml:space="preserve">
+    <value>Insira um CPF válido.</value>
+  </data>
+  <data name="ApenasNumeros" xml:space="preserve">
+    <value>O campo {0} aceita apenas números.</value>
+  </data>
 </root>

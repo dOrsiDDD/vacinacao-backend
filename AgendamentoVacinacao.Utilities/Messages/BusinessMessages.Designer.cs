@@ -61,11 +61,29 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo {0} aceita apenas números..
+        /// </summary>
+        public static string ApenasNumeros {
+            get {
+                return ResourceManager.GetString("ApenasNumeros", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O preenchimento do campo {0} é obrigatório..
         /// </summary>
         public static string CampoObrigatorio {
             get {
                 return ResourceManager.GetString("CampoObrigatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Insira um CPF válido..
+        /// </summary>
+        public static string CPFInvalido {
+            get {
+                return ResourceManager.GetString("CPFInvalido", resourceCulture);
             }
         }
         

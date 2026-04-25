@@ -3,6 +3,7 @@
     public class Paciente : IdEntity<int>
     {
         public string nome { get; set; }
+        public string cpf { get; set; }
         public DateOnly dataNascimento { get; set; }
         public DateTime dataCriacao { get; set; }
 
