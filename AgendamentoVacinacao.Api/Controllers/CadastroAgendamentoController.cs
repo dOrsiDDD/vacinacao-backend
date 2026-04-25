@@ -58,7 +58,7 @@ namespace AgendamentoVacinacao.WebApi.Controllers
 
         [HttpPut("AtualizarStatus")]
         [TransacaoObrigatoria]
-        public async Task<List<AgendamentoDTO>> AtualizarStatus(int id, StatusEnum novoStatus)
+        public async Task<List<AgendamentoDTO>> AtualizarStatus([FromQuery] int id, [FromBody] StatusEnum novoStatus)
         {
             return await _agendamentoBusiness.AtualizarStatus(id, novoStatus);
         }

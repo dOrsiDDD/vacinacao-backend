@@ -71,7 +71,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
                 idPaciente = _pacienteBase.Id,
                 dataAgendamento = dataAgendamento,
                 horaAgendamento = horaAgendamento,
-                status = "pendente",
+                status = StatusEnum.Pendente,
                 dataCriacao = DateTime.Now
             };
 
@@ -140,7 +140,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
                     idPaciente = _pacienteBase.Id,
                     dataAgendamento = dataAgendamento,
                     horaAgendamento = hora,
-                    status = "pendente",
+                    status = StatusEnum.Pendente,
                     dataCriacao = DateTime.Now
                 });
             }
@@ -171,7 +171,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
                     idPaciente = _pacienteBase.Id,
                     dataAgendamento = dataAgendamento,
                     horaAgendamento = horaEsgotada,
-                    status = "pendente",
+                    status = StatusEnum.Pendente,
                     dataCriacao = DateTime.Now
                 });
             }
@@ -191,7 +191,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task ListarAgendamentos_Sucesso()
         {
             // Arrange
-            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = "pendente" });
+            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = StatusEnum.Pendente });
             await _contexto.SaveChangesAsync();
 
             // Act
@@ -206,7 +206,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         {
             // Arrange
             var dataBusca = DateOnly.FromDateTime(DateTime.Today.AddDays(5));
-            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = dataBusca, horaAgendamento = new TimeOnly(10, 0), status = "pendente" });
+            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = dataBusca, horaAgendamento = new TimeOnly(10, 0), status = StatusEnum.Pendente });
             await _contexto.SaveChangesAsync();
 
             // Act
@@ -224,7 +224,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             var hora = new TimeOnly(15, 0);
             var dateTimeBusca = data.ToDateTime(hora);
 
-            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = data, horaAgendamento = hora, status = "pendente" });
+            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = data, horaAgendamento = hora, status = StatusEnum.Pendente });
             await _contexto.SaveChangesAsync();
 
             // Act
@@ -238,7 +238,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task FiltrarAgendamentos_Sucesso()
         {
             // Arrange
-            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = StatusEnum.Pendente.ToString().ToLower() });
+            _contexto.Add(new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = StatusEnum.Pendente });
             await _contexto.SaveChangesAsync();
 
             // Act
@@ -254,7 +254,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task AtualizarData_Sucesso()
         {
             // Arrange
-            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
+            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = StatusEnum.Pendente };
             _contexto.Add(agendamento);
             await _contexto.SaveChangesAsync();
 
@@ -287,7 +287,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task AtualizarStatus_Sucesso()
         {
             // Arrange
-            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
+            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = StatusEnum.Pendente };
             _contexto.Add(agendamento);
             await _contexto.SaveChangesAsync();
 
@@ -307,7 +307,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task Deletar_Unico_Sucesso()
         {
             // Arrange
-            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
+            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = StatusEnum.Pendente };
             _contexto.Add(agendamento);
             await _contexto.SaveChangesAsync();
 
@@ -322,8 +322,8 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public async Task Deletar_Lote_Sucesso()
         {
             // Arrange
-            var agendamento1 = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
-            var agendamento2 = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = "pendente" };
+            var agendamento1 = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = StatusEnum.Pendente };
+            var agendamento2 = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(10, 0), status = StatusEnum.Pendente };
 
             _contexto.AddRange(agendamento1, agendamento2);
             await _contexto.SaveChangesAsync();
@@ -341,7 +341,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
         public void Deletar_Lote_ContendoIdInexistente_LancaExcecao()
         {
             // Arrange
-            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = "pendente" };
+            var agendamento = new Agendamento { idPaciente = _pacienteBase.Id, dataAgendamento = DateOnly.FromDateTime(DateTime.Today), horaAgendamento = new TimeOnly(9, 0), status = StatusEnum.Pendente };
             _contexto.Add(agendamento);
             _contexto.SaveChanges();
 

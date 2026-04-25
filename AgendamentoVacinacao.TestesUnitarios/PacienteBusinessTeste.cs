@@ -7,6 +7,7 @@ using AgendamentoVacinacao.Repository.Interface.IRepositories;
 using AgendamentoVacinacao.Repository.Repositories;
 using AgendamentoVacinacao.Utilities.Messages;
 using NUnit.Framework;
+using AgendamentoVacinacao.Entities.Enum;
 
 
 
@@ -147,7 +148,7 @@ namespace AgendamentoVacinacao.TestesUnitarios.Business
             {
                 dataAgendamento = new DateOnly(DateTime.Today.Year, DateTime.Today.Month, DateTime.Today.AddDays(1).Day),
                 horaAgendamento = new TimeOnly(14, 0, 0),
-                status = "Pendente",
+                status = StatusEnum.Pendente,
                 dataCriacao = DateTime.Now
             });
 

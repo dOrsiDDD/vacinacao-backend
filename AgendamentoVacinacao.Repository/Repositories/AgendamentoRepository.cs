@@ -56,7 +56,7 @@ namespace AgendamentoVacinacao.Repository.Repositories
 
         public async Task<List<AgendamentoDTO>> FiltrarAgendamentos(StatusEnum status)
         {
-            var agendamentos = await EntitySet.Where(a => a.status == status.ToString().ToLower())
+            var agendamentos = await EntitySet.Where(a => a.status == status)
                                               .Include(a => a.paciente)
                                               .Select(a => MapToDTO(a))
                                               .ToListAsync();
