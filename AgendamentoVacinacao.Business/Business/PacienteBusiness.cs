@@ -93,7 +93,7 @@ namespace AgendamentoVacinacao.Business.Business
         }
 
 
-        public async Task<List<PacienteDTO>> Inserir(CadastroPacienteModel novoPaciente)
+        public async Task<PacienteDTO> Inserir(CadastroPacienteModel novoPaciente)
         {
             _log.InfoFormat("Iniciando inserção de novo paciente. Nome: {0}", novoPaciente.nome);
 
@@ -106,7 +106,7 @@ namespace AgendamentoVacinacao.Business.Business
 
             _log.InfoFormat("Paciente inserido com sucesso. ID: {0}, Nome: {1}", resultado.Id, resultado.nome);
 
-            return await _pacienteRepository.ListarPacientes();
+            return await _pacienteRepository.ConsultarPaciente(resultado.cpf);
         }
 
         private static Paciente CriarPaciente(CadastroPacienteModel novoPaciente)
