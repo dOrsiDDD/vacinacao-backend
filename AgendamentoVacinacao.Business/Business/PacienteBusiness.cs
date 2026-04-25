@@ -37,19 +37,19 @@ namespace AgendamentoVacinacao.Business.Business
             return pacientes;
         }
 
-        public async Task<PacienteDTO> ObterPacientePorId(int id)
+        public async Task<PacienteDTO> ObterPacientePorCPF(string cpf)
         {
-            var paciente = await _pacienteRepository.ObterPacientePorId(id);
+            var paciente = await _pacienteRepository.ObterPacientePorCPF(cpf);
 
             if (paciente == null)
             {
-                _log.InfoFormat("Paciente com ID {0} não encontrado.", id);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
+                _log.InfoFormat("Paciente com CPF {0} não encontrado.", cpf);
+                throw new BusinessException(string.Format(BusinessMessages.CPFInvalido, cpf));
             }
 
-            _log.InfoFormat("Paciente com ID {0} obtido com sucesso. Nome: {1}", id, paciente.nome);
+            _log.InfoFormat("Paciente com CPF {0} obtido com sucesso. Nome: {1}", cpf, paciente.nome);
 
-            return await _pacienteRepository.ConsultarPaciente(id);
+            return await _pacienteRepository.ConsultarPaciente(cpf);
         }
 
         public async Task<List<PacienteDTO>> ObterPacientesPorNome(string nome)
@@ -68,7 +68,7 @@ namespace AgendamentoVacinacao.Business.Business
 
             foreach (var paciente in pacientes)
             {
-                var pacienteDTO = await _pacienteRepository.ConsultarPaciente(paciente.Id);
+                var pacienteDTO = await _pacienteRepository.ConsultarPaciente(paciente.cpf);
                 if (pacienteDTO != null)
                 {
                     pacientesDTO.Add(pacienteDTO);
@@ -78,16 +78,16 @@ namespace AgendamentoVacinacao.Business.Business
             return pacientesDTO;
         }
 
-        public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId)
+        public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(string cpf)
         {
-            var paciente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+            var paciente = await _pacienteRepository.ObterPacientePorCPF(cpf);
             if (paciente == null)
             {
-                _log.InfoFormat("Paciente com ID {0}.", pacienteId);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
+                _log.InfoFormat("Paciente com CPF {0} não encontrado.", cpf);
+                throw new BusinessException(string.Format(BusinessMessages.CPFInvalido, cpf));
             }
 
-            var agendamentos = await _pacienteRepository.ObterAgendamentosPorPaciente(pacienteId);
+            var agendamentos = await _pacienteRepository.ObterAgendamentosPorPaciente(paciente.cpf);
 
             return agendamentos;
         }
@@ -114,65 +114,66 @@ namespace AgendamentoVacinacao.Business.Business
             var paciente = new Paciente
             {
                 nome = novoPaciente.nome,
+                cpf = novoPaciente.cpf,
                 dataNascimento = novoPaciente.dataNascimento,
                 dataCriacao = DateTime.Now
             };
             return paciente;
         }
 
-        public async Task<PacienteDTO> AtualizarDataNascimento(int pacienteId, DateOnly novaDataNascimento)
+        public async Task<PacienteDTO> AtualizarDataNascimento(string cpf, DateOnly novaDataNascimento)
         {
-            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", pacienteId);
+            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", cpf);
 
             ValidarDataNascimento(novaDataNascimento);
 
-            var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+            var pacienteExistente = await _pacienteRepository.ObterPacientePorCPF(cpf);
 
             if (pacienteExistente == null)
             {
-                _log.WarnFormat("Tentativa de atualizar paciente inexistente. ID: {0}", pacienteId);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
+                _log.WarnFormat("Tentativa de atualizar paciente inexistente. CPF: {0}", cpf);
+                throw new BusinessException(string.Format(BusinessMessages.CPFInvalido, cpf));
             }
 
             pacienteExistente.dataNascimento = novaDataNascimento;
             var resultado = await _pacienteRepository.Atualizar(pacienteExistente);
 
             _log.InfoFormat("Paciente de nome: {0} atualizado com sucesso.", pacienteExistente.nome);
-            return await ObterPacientePorId(pacienteExistente.Id);
+            return await ObterPacientePorCPF(pacienteExistente.cpf);
         }
 
-        public async Task<PacienteDTO> AtualizarNome(int pacienteId, string nomeNovo)
+        public async Task<PacienteDTO> AtualizarNome(string cpf, string nomeNovo)
         {
-            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", pacienteId);
+            _log.InfoFormat("Iniciando atualização do paciente ID: {0}", cpf);
 
-            var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+            var pacienteExistente = await _pacienteRepository.ObterPacientePorCPF(cpf);
 
             if (pacienteExistente == null)
             {
-                _log.WarnFormat("Tentativa de atualizar paciente inexistente. ID: {0}", pacienteId);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
+                _log.WarnFormat("Tentativa de atualizar paciente inexistente. CPF: {0}", cpf);
+                throw new BusinessException(string.Format(BusinessMessages.CPFInvalido, cpf));
             }
 
             pacienteExistente.nome = nomeNovo;
             var resultado = await _pacienteRepository.Atualizar(pacienteExistente);
 
             _log.InfoFormat("Paciente de nome: {0} atualizado com sucesso.", pacienteExistente.nome);
-            return await ObterPacientePorId(pacienteExistente.Id);
+            return await ObterPacientePorCPF(pacienteExistente.cpf);
         }
 
-        public async Task<List<PacienteDTO>> Deletar(int pacienteId)
+        public async Task<List<PacienteDTO>> Deletar(string cpf)
         {
-            var pacienteExistente = await _pacienteRepository.ObterPacientePorId(pacienteId);
+            var pacienteExistente = await _pacienteRepository.ObterPacientePorCPF(cpf);
 
             if (pacienteExistente == null)
             {
-                _log.WarnFormat("Tentativa de deletar paciente inexistente. ID: {0}", pacienteId);
-                throw new BusinessException(string.Format(BusinessMessages.IdInvalido, pacienteId));
+                _log.WarnFormat("Tentativa de deletar paciente inexistente. CPF: {0}", cpf);
+                throw new BusinessException(string.Format(BusinessMessages.CPFInvalido, cpf));
             }
 
             await _pacienteRepository.Deletar(pacienteExistente);
 
-            _log.InfoFormat("Paciente ID: {0} deletado com sucesso.", pacienteId);
+            _log.InfoFormat("Paciente CPF: {0} deletado com sucesso.", cpf);
 
             return await _pacienteRepository.ListarPacientes();
         }

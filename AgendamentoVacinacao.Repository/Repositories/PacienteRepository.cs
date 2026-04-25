@@ -19,10 +19,10 @@ namespace AgendamentoVacinacao.Repository.Repositories
             return pacientes;
         }
 
-        public async Task<Paciente> ObterPacientePorId(int id)
+        public async Task<Paciente> ObterPacientePorCPF(string cpf)
         {
             var paciente = await EntitySet.Include(p => p.agendamentos)
-                                          .FirstOrDefaultAsync(p => p.Id == id);
+                                          .FirstOrDefaultAsync(p => p.cpf == cpf);
 
             return paciente;
         }
@@ -36,10 +36,10 @@ namespace AgendamentoVacinacao.Repository.Repositories
             return pacientes;
         }
 
-        public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(int pacienteId)
+        public async Task<List<AgendamentoDTO>> ObterAgendamentosPorPaciente(string cpf)
         {
             var agendamentos = await EntitySet.Include(p => p.agendamentos)
-                                              .Where(p => p.Id == pacienteId)
+                                              .Where(p => p.cpf == cpf)
                                               .SelectMany(p => p.agendamentos)
                                               .Select(a => new AgendamentoDTO
                                               {
@@ -54,9 +54,9 @@ namespace AgendamentoVacinacao.Repository.Repositories
             return agendamentos;
         }
 
-        public async Task<PacienteDTO> ConsultarPaciente(int id)
+        public async Task<PacienteDTO> ConsultarPaciente(string cpf)
         {
-            var paciente = await ObterPacientePorId(id);
+            var paciente = await ObterPacientePorCPF(cpf);
             if (paciente == null)
             {
                 return null;
@@ -70,6 +70,7 @@ namespace AgendamentoVacinacao.Repository.Repositories
             {
                 id = paciente.Id,
                 nome = paciente.nome,
+                cpf = paciente.cpf,
                 dataNascimento = paciente.dataNascimento,
                 dataCriacao = paciente.dataCriacao,
                 agendamentos = paciente.agendamentos

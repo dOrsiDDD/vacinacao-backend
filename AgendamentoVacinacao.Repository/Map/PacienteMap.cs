@@ -24,6 +24,14 @@ namespace AgendamentoVacinacao.Repository.Map
                    .HasColumnName("dat_nascimento")
                    .IsRequired();
 
+            builder.Property(e => e.cpf)
+                   .HasColumnName("dsc_cpf")
+                   .HasMaxLength(11)
+                   .IsFixedLength()
+                   .IsRequired();
+
+            builder.HasIndex(e => e.cpf)
+                   .IsUnique();
 
             builder.Property(e => e.dataCriacao)
                    .HasColumnName("dat_criacao")
