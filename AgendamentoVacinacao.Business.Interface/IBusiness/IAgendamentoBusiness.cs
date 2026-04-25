@@ -12,10 +12,9 @@ namespace AgendamentoVacinacao.Business.Interface.IBusiness
         Task<List<AgendamentoDTO>> ConsultarAgendamentosPorDia(DateOnly dia);
         Task<List<AgendamentoDTO>> ConsultarAgendamentosPorHorario(DateTime horario);
         Task<List<AgendamentoDTO>> FiltrarAgendamentos(StatusEnum status);
-        Task<Agendamento> ObterAgendamentoPorId(int id);
 
         // Métodos do RepositorioBase
-        Task<List<AgendamentoDTO>> Inserir(CadastroAgendamentoModel agendamento);
+        Task<AgendamentoDTO> Inserir(CadastroAgendamentoModel agendamento);
         Task<List<AgendamentoDTO>> AtualizarData(int id, DateTime novaData);
         Task<List<AgendamentoDTO>> AtualizarStatus(int id, StatusEnum novoStatus);
         Task Deletar(IEnumerable<int> agendamentosIds);

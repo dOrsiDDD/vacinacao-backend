@@ -11,6 +11,7 @@ namespace AgendamentoVacinacao.Repository.Interface.IRepositories
         Task<List<AgendamentoDTO>> ConsultarAgendamentosPorDia(DateOnly dia);
         Task<List<AgendamentoDTO>> ConsultarAgendamentosPorHorario(DateTime horario);
         Task<List<AgendamentoDTO>> FiltrarAgendamentos(StatusEnum status);
+        Task<AgendamentoDTO> ConsultarAgendamentoPorId(int id);
         Task<Agendamento> ObterAgendamentoPorId(int id);   
     }
 }
