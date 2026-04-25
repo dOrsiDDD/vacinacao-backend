@@ -1,5 +1,7 @@
 ﻿using AgendamentoVacinacao.Business.Business;
 using AgendamentoVacinacao.Business.Interface.IBusiness;
+using AgendamentoVacinacao.Repositorio;
+using AgendamentoVacinacao.Repositorio.Interface;
 using AgendamentoVacinacao.Repository.Interface.IRepositories;
 using AgendamentoVacinacao.Repository.Repositories;
 using AgendamentoVacinacao.WebApi.Middleware;
@@ -13,6 +15,8 @@ namespace AgendamentoVacinacao.WebApi.Configuration
             InjetarRepositorio(services);
             InjetarServico(services);
             InjetarMiddleware(services);
+
+            services.AddScoped<IGerenciadorTransacao, GerenciadorTransacao>();
         }
 
         private static void InjetarRepositorio(IServiceCollection services)

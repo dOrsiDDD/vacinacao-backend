@@ -3,6 +3,7 @@ using AgendamentoVacinacao.Entities.Model;
 using AgendamentoVacinacao.Business.Interface.IBusiness;
 using Microsoft.AspNetCore.Mvc;
 using AgendamentoVacinacao.Entities.Enum;
+using AgendamentoVacinacao.Utilitarios.Attributes;
 
 namespace AgendamentoVacinacao.WebApi.Controllers
 {
@@ -18,6 +19,7 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpPost("CadastrarAgendamento")]
+        [TransacaoObrigatoria]
         public async Task<List<AgendamentoDTO>> CadastrarAgendamento(CadastroAgendamentoModel novoAgendamento)
         {
             return await _agendamentoBusiness.Inserir(novoAgendamento);
@@ -48,24 +50,28 @@ namespace AgendamentoVacinacao.WebApi.Controllers
         }
 
         [HttpPut("AtualizarData")]
+        [TransacaoObrigatoria]
         public async Task<List<AgendamentoDTO>> AtualizarData(int id, DateTime novaData)
         {
             return await _agendamentoBusiness.AtualizarData(id, novaData);
         }
 
         [HttpPut("AtualizarStatus")]
+        [TransacaoObrigatoria]
         public async Task<List<AgendamentoDTO>> AtualizarStatus(int id, StatusEnum novoStatus)
         {
             return await _agendamentoBusiness.AtualizarStatus(id, novoStatus);
         }
 
         [HttpDelete("DeletarAgendamento")]
+        [TransacaoObrigatoria]
         public async Task DeletarAgendamento(int id)
         {
             await _agendamentoBusiness.Deletar(id);
         }
 
         [HttpDelete("DeletarAgendamentos")]
+        [TransacaoObrigatoria]
         public async Task DeletarAgendamentos(IEnumerable<int> agendamentosIds)
         {
             await _agendamentoBusiness.Deletar(agendamentosIds);
