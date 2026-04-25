@@ -95,7 +95,7 @@ namespace AgendamentoVacinacao.Business.Business
                 idPaciente = agendamentoModel.idPaciente,
                 dataAgendamento = agendamentoModel.dataAgendamento,
                 horaAgendamento = agendamentoModel.horaAgendamento,
-                status = "pendente",
+                status = StatusEnum.Pendente,
                 dataCriacao = DateTime.Now
             };
         }
@@ -135,7 +135,7 @@ namespace AgendamentoVacinacao.Business.Business
                 throw new BusinessException(string.Format(BusinessMessages.IdInvalido, id));
             }
 
-            agendamentoExistente.status = novoStatus.ToString();
+            agendamentoExistente.status = novoStatus;
 
             var resultado = await _agendamentoRepository.Atualizar(agendamentoExistente);
 
