@@ -159,4 +159,13 @@
   <data name="ApenasNumeros" xml:space="preserve">
     <value>O campo {0} aceita apenas números.</value>
   </data>
+  <data name="RegistroInexistente" xml:space="preserve">
+    <value>O registro {0} não existe com o valor {1}.</value>
+  </data>
+  <data name="CampoInvalido" xml:space="preserve">
+    <value>O campo {0} está inválido.</value>
+  </data>
+  <data name="UsuarioSenhaInvalida" xml:space="preserve">
+    <value>Usuario ou senha invalidos.</value>
+  </data>
 </root>

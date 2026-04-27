@@ -70,6 +70,15 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O campo {0} está inválido..
+        /// </summary>
+        public static string CampoInvalido {
+            get {
+                return ResourceManager.GetString("CampoInvalido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a O preenchimento do campo {0} é obrigatório..
         /// </summary>
         public static string CampoObrigatorio {
@@ -183,6 +192,24 @@ namespace AgendamentoVacinacao.Utilities.Messages {
         public static string RegistroExistente {
             get {
                 return ResourceManager.GetString("RegistroExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O registro {0} não existe com o valor {1}..
+        /// </summary>
+        public static string RegistroInexistente {
+            get {
+                return ResourceManager.GetString("RegistroInexistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Usuario ou senha invalidos..
+        /// </summary>
+        public static string UsuarioSenhaInvalida {
+            get {
+                return ResourceManager.GetString("UsuarioSenhaInvalida", resourceCulture);
             }
         }
     }
