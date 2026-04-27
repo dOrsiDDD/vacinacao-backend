@@ -4,11 +4,13 @@ using AgendamentoVacinacao.Business.Interface.IBusiness;
 using Microsoft.AspNetCore.Mvc;
 using AgendamentoVacinacao.Entities.Enum;
 using AgendamentoVacinacao.Utilitarios.Attributes;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgendamentoVacinacao.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = "Medico")]
     public class CadastroAgendamentoController : ControllerBase
     {
         private readonly IAgendamentoBusiness _agendamentoBusiness;
